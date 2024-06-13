@@ -1,13 +1,25 @@
-import { StyleSheet, View, Text, TouchableOpacity,Image, TextInput } from 'react-native'
-import React from 'react'
+import { StyleSheet, View, Text, TouchableOpacity,Image, TextInput, ScrollView } from 'react-native'
+import React, { useState } from 'react'
 import { Stack } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import Color from '@/constants/Color'
 import { useHeaderHeight } from '@react-navigation/elements';
 import CategoryButton from '@/components/CategoryButton'
+import Listings from '@/components/Listings'
+import listingData from '@/data/destinations.json';
+import GroupListing from '@/components/GroupListing';
+import Groupdata from '@/data/groups.json';
+
 
 const index = () => {
     const headerHeight = useHeaderHeight();
+    const [ category, setCategory ] = useState('All');
+
+    const onCatChanged = (category : string) =>{
+        console.log("Category : ",category)
+        setCategory(category);
+    }
+
   return (
     <>
     <Stack.Screen options={{
@@ -35,7 +47,9 @@ const index = () => {
             </TouchableOpacity>
         )
     }}/>
+   
     <View style={[styles.container , { paddingTop : headerHeight}]}>
+    <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={ styles.headingTxt}> Explore the beautiful World</Text>
         <View style={styles.searchSectionWrapper}>
             <View style={styles.searchBar}>
@@ -46,7 +60,10 @@ const index = () => {
                 <Ionicons name='options' size={28} color={Color.white}/>
             </TouchableOpacity>
         </View>
-        <CategoryButton/>
+        <CategoryButton onCategoryChanged={onCatChanged}/>
+        <Listings listings={listingData} category={category}/>
+        <GroupListing listing={Groupdata}/>
+        </ScrollView>
     </View>
     
     </>
